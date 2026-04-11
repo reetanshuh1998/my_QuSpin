@@ -25,6 +25,8 @@ from numpy.random import uniform, choice
 from time import time
 import matplotlib.pyplot as plt
 
+np.random.seed(42)
+
 #####################################################################
 # Parameters
 #####################################################################
@@ -90,6 +92,10 @@ s_down = "".join("0010" for _ in range(N_down))
 i_0    = basis.index(s_up, s_down)
 psi_0  = np.zeros(basis.Ns)
 psi_0[i_0] = 1.0
+
+# Sanity Check
+assert abs(I_op.expt_value(psi_0).real - 1.0) < 1e-10, "Initial imbalance must be 1.0"
+
 print(f"Initial state: |{s_up}>(x)|{s_down}>")
 
 #####################################################################

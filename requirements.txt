@@ -1,0 +1,4 @@
+quspin>=0.3.7
+numpy
+scipy
+matplotlib

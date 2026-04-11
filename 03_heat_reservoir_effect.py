@@ -32,6 +32,8 @@ from scipy.integrate import solve_ivp
 from time import time
 import matplotlib.pyplot as plt
 
+np.random.seed(42)
+
 #####################################################################
 # Parameters
 #####################################################################
@@ -62,8 +64,8 @@ print(f"Hilbert space dimension: {dim}")
 #####################################################################
 # Initial state
 #####################################################################
-s_up   = "".join("100" for _ in range(N_up))
-s_down = "".join("010" for _ in range(N_down))
+s_up   = "100010"
+s_down = "001000"
 i_0    = basis.index(s_up, s_down)
 psi_0  = np.zeros(dim)
 psi_0[i_0] = 1.0
@@ -111,7 +113,11 @@ for i in range(L):
     operator_dict["n" + str(i)] = [["n|", [[1.0, i]]], ["|n", [[1.0, i]]]]
 
 I_op = hamiltonian(imbalance_list, [], basis=basis, **no_checks)
+I_op = hamiltonian(imbalance_list, [], basis=basis, **no_checks)
 I_mat = I_op.toarray()
+
+# Sanity assertion
+assert abs(I_op.expt_value(psi_0).real - 1.0) < 1e-10, "Initial imbalance must be 1.0"
 
 #####################################################################
 # Lindblad RHS function using split real/imag to please solve_ivp

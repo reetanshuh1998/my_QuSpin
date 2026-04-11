@@ -18,6 +18,8 @@ from numpy.random import uniform, choice
 from time import time
 import matplotlib.pyplot as plt
 
+np.random.seed(42)
+
 #####################################################################
 # Parameters
 #####################################################################
@@ -48,11 +50,16 @@ print(f"Hilbert space dimension: {basis.Ns}")
 #####################################################################
 # As asked, we start from a pure product state. 
 # We use the standard N\'eel state for N_up=N_down.
-s_up   = "".join("10" for _ in range(N_up))
-s_down = "".join("01" for _ in range(N_down))
+s_up   = "".join("1000" for _ in range(N_up))
+s_down = "".join("0010" for _ in range(N_down))
 i_0    = basis.index(s_up, s_down)
 psi_0  = np.zeros(basis.Ns)
 psi_0[i_0] = 1.0
+
+# Add a sanity check to verify initial imbalance
+# The sublattice imbalance operator isn't explicitly built here, but we can trust the index if no error is thrown by QuSpin.
+# Actually let's just make sure strings are the correct length.
+assert len(s_up) == L and len(s_down) == L, "Initial state string length must match system size L"
 
 subsys_A = (range(L // 2), range(L // 2))
 
@@ -66,12 +73,14 @@ def run_realization_ent(H_dict, w, t_eval, i_real, n_real):
         params_dict["n" + str(j)] = uniform(-w, w)
     H = H_dict.tohamiltonian(params_dict)
     
-    # Time evolution operator
-    U_op = exp_op(H, a=-1j, start=t_eval.min(), stop=t_eval.max(), 
-                  num=len(t_eval), iterate=True)
+    # Full Exact Diagonalization to correctly evaluate at log-spaced times
+    H_mat = H.toarray()
+    E, V = np.linalg.eigh(H_mat)
+    c = V.conj().T @ psi_0
     
     S_t = np.zeros(len(t_eval))
-    for it, psi_t in enumerate(U_op.dot(psi_0)):
+    for it, tt in enumerate(t_eval):
+        psi_t = V @ (c * np.exp(-1j * E * tt))
         # Calculate entanglement entropy
         ent = basis.ent_entropy(psi_t, sub_sys_A=subsys_A, density=False)
         S_t[it] = ent['Sent_A']

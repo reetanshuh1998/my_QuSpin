@@ -15,10 +15,12 @@ from numpy.random import uniform, choice
 from time import time
 import matplotlib.pyplot as plt
 
+np.random.seed(42)
+
 #####################################################################
 # Parameters
 #####################################################################
-n_real = 25   # Reduced to save time
+n_real = 100   # Increased to 100 for proper statistical representation
 n_boot = 50
 
 # Literature firmly requires L >= 8 to see the crossover sharply. 
@@ -28,8 +30,8 @@ N = L // 2
 N_up = N // 2 + N % 2
 N_down = N // 2
 
-# We reduce the resolution to 5 points to save computational time
-w_list = [1.0, 4.0, 7.0, 11.0, 16.0]
+# Finer grid across the critical MBL transition region
+w_list = [1.0, 2.0, 3.0, 4.0, 5.0, 7.0, 11.0, 16.0]
 J_hop = 1.0
 U_val = 5.0
 

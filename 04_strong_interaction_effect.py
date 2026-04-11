@@ -24,6 +24,8 @@ from numpy.random import uniform, choice
 from time import time
 import matplotlib.pyplot as plt
 
+np.random.seed(42)
+
 #####################################################################
 # Parameters
 #####################################################################
@@ -68,8 +70,13 @@ i_0    = basis.index(s_up, s_down)
 psi_0  = np.zeros(basis.Ns)
 psi_0[i_0] = 1.0
 
+psi_0[i_0] = 1.0
+
 # imbalance observable (U-independent)
 I_op = hamiltonian(imbalance_list, [], basis=basis, **no_checks)
+
+# Verify initial imbalance
+assert abs(I_op.expt_value(psi_0).real - 1.0) < 1e-10, "Initial imbalance must be 1.0"
 
 #####################################################################
 # Realization function
@@ -119,14 +126,21 @@ for U_val in U_list:
     print(f"  Completed in {time()-t0:.1f} s")
 
     I_avg = I_data.mean(axis=0)
-    bootstrap_gen = (
+    # Calculate errors
+    I_avg = I_data.mean(axis=0)
+    boot_means = np.array([
         I_data[choice(n_real, size=n_real)].mean(axis=0)
         for _ in range(n_boot)
-    )
-    sq_fluc_gen = ((bootstrap - I_avg)**2 for bootstrap in bootstrap_gen)
-    I_error = np.sqrt(sum(sq_fluc_gen) / n_boot)
+    ])
+    I_error = np.std(boot_means, axis=0)
 
-    results[U_val] = (I_avg, I_error)
+    # Correct error propagation for time-averaged I_inf
+    t_mask = t >= 25.0
+    I_inf = I_avg[t_mask].mean()
+    boot_I_inf = np.array([b[t_mask].mean() for b in boot_means])
+    I_inf_err = np.std(boot_I_inf)
+
+    results[U_val] = (I_avg, I_error, I_inf, I_inf_err)
 
 #####################################################################
 # Plot 1: Full I(t) curves for all U values
@@ -136,7 +150,7 @@ cmap = plt.cm.viridis
 colors = [cmap(i / (len(U_list) - 1)) for i in range(len(U_list))]
 
 for idx, U_val in enumerate(U_list):
-    I_avg, I_error = results[U_val]
+    I_avg, I_error, _, _ = results[U_val]
     ax1.errorbar(t, I_avg, I_error, marker=".", markersize=3,
                  color=colors[idx], label=f"U/J={U_val:.1f}",
                  linewidth=0.8, elinewidth=0.4, capsize=1)
@@ -162,9 +176,7 @@ t_mask = t >= 25.0  # long-time window [25, 35]
 I_inf_vals = []
 I_inf_errs = []
 for U_val in U_list:
-    I_avg, I_error = results[U_val]
-    I_inf = I_avg[t_mask].mean()
-    I_inf_err = I_error[t_mask].mean()  # approximate error
+    I_avg, I_error, I_inf, I_inf_err = results[U_val]
     I_inf_vals.append(I_inf)
     I_inf_errs.append(I_inf_err)
 
