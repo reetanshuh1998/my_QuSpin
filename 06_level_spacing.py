@@ -30,8 +30,9 @@ N = L // 2
 N_up = N // 2 + N % 2
 N_down = N // 2
 
-# Dense grid near the critical transition region (W_c ~ 3.5-5 for U=5)
-# Matches Luitz et al. PRB 2015 Fig. 2 resolution
+# Dense grid to resolve the GOE-to-Poisson crossover
+# At quarter-filling (N_up=2, N_down=2), W_c is lower than at half-filling
+# because fewer particles means weaker interactions and easier localization
 w_list = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0, 6.0, 8.0, 10.0]
 J_hop = 1.0
 U_val = 5.0
