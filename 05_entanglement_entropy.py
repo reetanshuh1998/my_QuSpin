@@ -27,9 +27,11 @@ n_real = 30
 n_boot = 50
 
 L = 8
-N = L              # half-filling
-N_up = L // 2      # = 4
-N_down = L // 2    # = 4
+N = L // 2             # quarter-filling
+N_up = N // 2 + N % 2  # = 2
+N_down = N // 2        # = 2
+# --- Half-filling option (dim=4900, much slower) ---
+# N = L;  N_up = L // 2;  N_down = L // 2
 
 U_list = [0.0, 1.0, 5.0, 10.0]
 J_hop = 1.0
@@ -50,9 +52,10 @@ print(f"Hilbert space dimension: {basis.Ns}")
 #####################################################################
 # As asked, we start from a pure product state. 
 # We use the standard N\'eel state for N_up=N_down.
-# CDW Néel state: all particles on even sites (doubly occupied)
-s_up   = "10101010"
-s_down = "10101010"
+s_up   = "10001000"
+s_down = "00100010"
+# --- Half-filling CDW state (use with N_up=N_down=4) ---
+# s_up = "10101010";  s_down = "10101010"
 i_0    = basis.index(s_up, s_down)
 psi_0  = np.zeros(basis.Ns)
 psi_0[i_0] = 1.0

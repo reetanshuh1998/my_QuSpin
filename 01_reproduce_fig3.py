@@ -34,9 +34,11 @@ n_real = 100   # number of disorder realizations
 n_boot = 100   # number of bootstrap samples for error estimation
 
 L = 8          # system size
-N = L          # half-filling: 1 particle per site
-N_up = L // 2  # spin-up fermions  (= 4)
-N_down = L // 2 # spin-down fermions (= 4)
+N = L // 2     # total number of particles (quarter-filling)
+N_up = N // 2 + N % 2   # spin-up fermions  (= 2)
+N_down = N // 2          # spin-down fermions (= 2)
+# --- Half-filling option (literature standard, dim=4900, much slower) ---
+# N = L;  N_up = L // 2;  N_down = L // 2
 
 w_list = [1.0, 4.0, 10.0]  # disorder strengths
 J = 1.0    # hopping strength
@@ -86,9 +88,11 @@ no_checks = dict(check_pcon=False, check_symm=False, check_herm=False)
 H_dict = quantum_operator(operator_dict, basis=basis, **no_checks)
 I_op   = hamiltonian(imbalance_list, [], basis=basis, **no_checks)
 
-# initial state: CDW Néel state — all particles on even sites (doubly occupied)
-s_up   = "10101010"  # up-spins at sites 0, 2, 4, 6
-s_down = "10101010"  # down-spins at sites 0, 2, 4, 6
+# initial state: up-spins on sites 0,4; down-spins on sites 2,6 (all even)
+s_up   = "10001000"
+s_down = "00100010"
+# --- Half-filling CDW state (use with N_up=N_down=4) ---
+# s_up = "10101010";  s_down = "10101010"
 i_0    = basis.index(s_up, s_down)
 psi_0  = np.zeros(basis.Ns)
 psi_0[i_0] = 1.0

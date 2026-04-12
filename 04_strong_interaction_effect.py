@@ -33,9 +33,11 @@ n_real = 100
 n_boot = 100
 
 L = 8
-N = L              # half-filling
-N_up = L // 2      # = 4
-N_down = L // 2    # = 4
+N = L // 2             # quarter-filling
+N_up = N // 2 + N % 2  # = 2
+N_down = N // 2        # = 2
+# --- Half-filling option (dim=4900, much slower) ---
+# N = L;  N_up = L // 2;  N_down = L // 2
 
 w = 4.0            # fixed disorder strength (near MBL transition)
 J_hop = 1.0        # hopping
@@ -63,9 +65,10 @@ imbalance_list = [["n|", sublat_list], ["|n", sublat_list]]
 #####################################################################
 # Initial state
 #####################################################################
-# CDW Néel state: all particles on even sites
-s_up   = "10101010"
-s_down = "10101010"
+s_up   = "10001000"
+s_down = "00100010"
+# --- Half-filling CDW state (use with N_up=N_down=4) ---
+# s_up = "10101010";  s_down = "10101010"
 no_checks = dict(check_pcon=False, check_symm=False, check_herm=False)
 i_0    = basis.index(s_up, s_down)
 psi_0  = np.zeros(basis.Ns)

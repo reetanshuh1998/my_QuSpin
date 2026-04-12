@@ -26,9 +26,11 @@ n_boot = 50
 # Literature firmly requires L >= 8 to see the crossover sharply. 
 # Anything smaller will be completely smeared out by finite-size effects.
 L = 8         
-N = L              # half-filling
-N_up = L // 2      # = 4
-N_down = L // 2    # = 4
+N = L // 2             # quarter-filling
+N_up = N // 2 + N % 2  # = 2
+N_down = N // 2        # = 2
+# --- Half-filling option (dim=4900, much slower) ---
+# N = L;  N_up = L // 2;  N_down = L // 2
 
 # Dense grid to resolve the GOE-to-Poisson crossover
 # At half-filling (N_up=4, N_down=4), W_c ~ 3.5-5 for U=5

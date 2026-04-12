@@ -37,13 +37,15 @@ np.random.seed(42)
 #####################################################################
 # Parameters
 #####################################################################
-n_real = 20   # Reduced: density matrix at half-filling (dim=400) is expensive
+n_real = 50
 n_boot = 50
 
 L = 6
-N = L              # half-filling
-N_up = L // 2      # = 3
-N_down = L // 2    # = 3
+N = L // 2
+N_up = N // 2 + N % 2  # = 2
+N_down = N // 2        # = 1
+# --- Half-filling option (dim=400, slower for Lindblad ODE) ---
+# N = L;  N_up = L // 2;  N_down = L // 2;  n_real = 20
 
 w = 5.0
 J_hop = 1.0
@@ -64,9 +66,10 @@ print(f"Hilbert space dimension: {dim}")
 #####################################################################
 # Initial state
 #####################################################################
-# CDW Néel state: all particles on even sites (doubly occupied)
-s_up   = "101010"   # up-spins at sites 0, 2, 4
-s_down = "101010"   # down-spins at sites 0, 2, 4
+s_up   = "100010"
+s_down = "001000"
+# --- Half-filling CDW state (use with N_up=3, N_down=3) ---
+# s_up = "101010";  s_down = "101010"
 i_0    = basis.index(s_up, s_down)
 psi_0  = np.zeros(dim)
 psi_0[i_0] = 1.0
