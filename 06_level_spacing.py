@@ -20,7 +20,7 @@ np.random.seed(42)
 #####################################################################
 # Parameters
 #####################################################################
-n_real = 100   # Increased to 100 for proper statistical representation
+n_real = 300   # Increased for robust statistics near the transition
 n_boot = 50
 
 # Literature firmly requires L >= 8 to see the crossover sharply. 
@@ -30,8 +30,9 @@ N = L // 2
 N_up = N // 2 + N % 2
 N_down = N // 2
 
-# Finer grid across the critical MBL transition region
-w_list = [1.0, 2.0, 3.0, 4.0, 5.0, 7.0, 11.0, 16.0]
+# Dense grid near the critical transition region (W_c ~ 3.5-5 for U=5)
+# Matches Luitz et al. PRB 2015 Fig. 2 resolution
+w_list = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0, 6.0, 8.0, 10.0]
 J_hop = 1.0
 U_val = 5.0
 
