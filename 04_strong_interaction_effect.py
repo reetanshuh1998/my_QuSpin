@@ -70,8 +70,6 @@ i_0    = basis.index(s_up, s_down)
 psi_0  = np.zeros(basis.Ns)
 psi_0[i_0] = 1.0
 
-psi_0[i_0] = 1.0
-
 # imbalance observable (U-independent)
 I_op = hamiltonian(imbalance_list, [], basis=basis, **no_checks)
 
@@ -127,7 +125,6 @@ for U_val in U_list:
 
     I_avg = I_data.mean(axis=0)
     # Calculate errors
-    I_avg = I_data.mean(axis=0)
     boot_means = np.array([
         I_data[choice(n_real, size=n_real)].mean(axis=0)
         for _ in range(n_boot)
@@ -171,7 +168,6 @@ plt.close(fig1)
 # Plot 2: Long-time imbalance vs U
 #####################################################################
 fig2, ax2 = plt.subplots(figsize=(7, 5))
-t_mask = t >= 25.0  # long-time window [25, 35]
 
 I_inf_vals = []
 I_inf_errs = []
