@@ -26,13 +26,13 @@ n_boot = 50
 # Literature firmly requires L >= 8 to see the crossover sharply. 
 # Anything smaller will be completely smeared out by finite-size effects.
 L = 8         
-N = L // 2
-N_up = N // 2 + N % 2
-N_down = N // 2
+N = L              # half-filling
+N_up = L // 2      # = 4
+N_down = L // 2    # = 4
 
 # Dense grid to resolve the GOE-to-Poisson crossover
-# At quarter-filling (N_up=2, N_down=2), W_c is lower than at half-filling
-# because fewer particles means weaker interactions and easier localization
+# At half-filling (N_up=4, N_down=4), W_c ~ 3.5-5 for U=5
+# (De Tomasi et al. PRB 2019, Luitz et al. PRB 2015)
 w_list = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0, 6.0, 8.0, 10.0]
 J_hop = 1.0
 U_val = 5.0

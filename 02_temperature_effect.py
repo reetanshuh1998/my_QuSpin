@@ -28,9 +28,9 @@ np.random.seed(42)
 n_real = 50
 n_boot = 100
 L = 8
-N = L // 2
-N_up = N // 2 + N % 2
-N_down = N // 2
+N = L              # half-filling
+N_up = L // 2      # = 4
+N_down = L // 2    # = 4
 
 w = 4.0
 J_hop = 1.0
@@ -78,9 +78,9 @@ H_dict_template = quantum_operator(operator_dict, basis=basis, **no_checks)
 I_op = hamiltonian(imbalance_list, [], basis=basis, **no_checks)
 I_mat = I_op.toarray()
 
-# Pure initial state (Strict Neel State for maximum imbalance)
-s_up   = "10001000"
-s_down = "00100010"
+# Pure initial state (CDW Néel State — all particles on even sites)
+s_up   = "10101010"
+s_down = "10101010"
 i_0    = basis.index(s_up, s_down)
 psi_Neel = np.zeros(basis.Ns)
 psi_Neel[i_0] = 1.0

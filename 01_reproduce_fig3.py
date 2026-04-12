@@ -34,9 +34,9 @@ n_real = 100   # number of disorder realizations
 n_boot = 100   # number of bootstrap samples for error estimation
 
 L = 8          # system size
-N = L // 2     # total number of particles
-N_up = N // 2 + N % 2   # spin-up fermions
-N_down = N // 2          # spin-down fermions
+N = L          # half-filling: 1 particle per site
+N_up = L // 2  # spin-up fermions  (= 4)
+N_down = L // 2 # spin-down fermions (= 4)
 
 w_list = [1.0, 4.0, 10.0]  # disorder strengths
 J = 1.0    # hopping strength
@@ -86,9 +86,9 @@ no_checks = dict(check_pcon=False, check_symm=False, check_herm=False)
 H_dict = quantum_operator(operator_dict, basis=basis, **no_checks)
 I_op   = hamiltonian(imbalance_list, [], basis=basis, **no_checks)
 
-# initial state: alternating spins on every other site
-s_up   = "".join("1000" for _ in range(N_up))
-s_down = "".join("0010" for _ in range(N_down))
+# initial state: CDW Néel state — all particles on even sites (doubly occupied)
+s_up   = "10101010"  # up-spins at sites 0, 2, 4, 6
+s_down = "10101010"  # down-spins at sites 0, 2, 4, 6
 i_0    = basis.index(s_up, s_down)
 psi_0  = np.zeros(basis.Ns)
 psi_0[i_0] = 1.0
