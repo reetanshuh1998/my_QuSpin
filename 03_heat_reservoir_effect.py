@@ -45,10 +45,10 @@ N = L // 2
 N_up = N // 2 + N % 2
 N_down = N // 2
 
-w = 10.0
+w = 5.0
 J_hop = 1.0
 U_val = 5.0
-gamma_list = [0.0, 0.01, 0.1, 0.5]
+gamma_list = [0.0, 0.1, 0.5, 1.0]
 
 start, stop, num = 0.0, 35.0, 71
 t_eval = np.linspace(start, stop, num=num, endpoint=True)
@@ -112,7 +112,6 @@ operator_dict = dict(H0=operator_list_0)
 for i in range(L):
     operator_dict["n" + str(i)] = [["n|", [[1.0, i]]], ["|n", [[1.0, i]]]]
 
-I_op = hamiltonian(imbalance_list, [], basis=basis, **no_checks)
 I_op = hamiltonian(imbalance_list, [], basis=basis, **no_checks)
 I_mat = I_op.toarray()
 
@@ -212,23 +211,41 @@ for gamma in gamma_list:
 #####################################################################
 # Plot
 #####################################################################
-fig, ax = plt.subplots(figsize=(9, 5.5))
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5.5))
 colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']
 
 for idx, gamma in enumerate(gamma_list):
     I_avg, I_error = results[gamma]
-    label = rf"$\gamma = {gamma:.3f}$" if gamma > 0 else r"$\gamma = 0$ (isolated)"
-    ax.errorbar(t_eval, I_avg, I_error, marker=".", markersize=3,
-                color=colors[idx], label=label,
-                linewidth=0.8, elinewidth=0.4, capsize=1)
+    label = rf"$\gamma = {gamma:.2g}$" if gamma > 0 else r"$\gamma = 0$ (isolated)"
+    
+    # Linear scale subplot
+    ax1.errorbar(t_eval, I_avg, I_error, marker=".", markersize=3,
+                 color=colors[idx], label=label,
+                 linewidth=0.8, elinewidth=0.4, capsize=1)
+    
+    # Log-log scale subplot (skip t=0)
+    ax2.errorbar(t_eval[1:], I_avg[1:], I_error[1:], marker=".", markersize=3,
+                 color=colors[idx], label=label,
+                 linewidth=0.8, elinewidth=0.4, capsize=1)
 
-ax.set_xlabel(r"$Jt$", fontsize=18)
-ax.set_ylabel(r"$\mathcal{I}$", fontsize=18)
-ax.set_title(f"MBL: Heat Reservoir Effect (w={w:.1f}, U={U_val:.1f}, L={L})", fontsize=16)
-ax.tick_params(labelsize=14)
-ax.legend(loc="best", fontsize=12)
-ax.set_xlim(0, 35)
-ax.grid(True, alpha=0.3)
+ax1.set_xlabel(r"$Jt$", fontsize=16)
+ax1.set_ylabel(r"$\mathcal{I}$", fontsize=16)
+ax1.set_title("Linear Decay", fontsize=14)
+ax1.tick_params(labelsize=12)
+ax1.legend(loc="best", fontsize=11)
+ax1.set_xlim(0, 35)
+ax1.grid(True, alpha=0.3)
+
+ax2.set_xscale('log')
+ax2.set_yscale('log')
+ax2.set_xlabel(r"$Jt$ (log)", fontsize=16)
+ax2.set_ylabel(r"$\mathcal{I}$ (log)", fontsize=16)
+ax2.set_title("Subdiffusive Power-Law Decay", fontsize=14)
+ax2.tick_params(labelsize=12)
+ax2.legend(loc="best", fontsize=11)
+ax2.grid(True, alpha=0.3)
+
+fig.suptitle(f"MBL: Heat Reservoir Effect (w={w:.1f}, U={U_val:.1f}, L={L})", fontsize=16)
 fig.tight_layout()
 fig.savefig("MBL_heat_reservoir.png", dpi=150, bbox_inches="tight")
 print("\nSaved: MBL_heat_reservoir.png")
