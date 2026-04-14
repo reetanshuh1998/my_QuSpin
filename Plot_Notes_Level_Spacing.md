@@ -40,3 +40,10 @@ At $L=8$ (Hilbert space dimension 784), the transition curve is **broadened** co
 
 ### 6. Why $\langle r \rangle$ is Preferred Over $P(s)$
 Older studies used the full level spacing distribution $P(s)$ (requiring "spectrum unfolding" to remove the local density of states). The ratio $r_n$ was introduced by Oganesyan & Huse (2007) specifically because it is **independent of the local density of states** and requires no unfolding. This makes it computationally simpler and statistically more robust — which is why it has become the standard MBL diagnostic in modern literature.
+
+### 7. System Details and Quarter-Filling Note
+- **Quarter-filling** ($N_{up}=2, N_{down}=2$, $L=8$): Hilbert space dim = 784
+- The critical disorder $W_c$ in this system is **lower** than the half-filling benchmark values quoted in Luitz et al. (PRB 2015, $W_c \approx 3.5$–$5J$), because fewer particles means weaker many-body interactions and easier localization
+- The qualitative physics — S-shaped GOE→Poisson crossover — is identical at any filling; only the precise location of $W_c$ shifts
+- 300 disorder realizations × 12 disorder strengths provides sufficient statistical resolution to clearly resolve the crossover region
+
